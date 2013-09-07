@@ -64,7 +64,7 @@ namespace Matchy
                 this.matchValue = matchValue;
             }
 
-            public Def With(T result)
+            public Def With(object result)
             {
                 this.getResult = (x) => result;
                 return parent;
