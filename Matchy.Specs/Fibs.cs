@@ -5,7 +5,7 @@ namespace Matchy.Specs
     [TestClass]
     public class Fibs
     {
-        IMatch fib = null;
+        Def fib = null;
 
         [TestInitialize]
         public void SetupFibs()
@@ -13,7 +13,8 @@ namespace Matchy.Specs
             fib = new Def()
                .match(0).with(0)
                .match(1).with(1)
-               .match<int>().with(n => fib[n-1]*fib[n-2]);
+               .match(2).with(1)
+               .match<int>().with(n => fib[n - 1] * fib[n - 2]);
         }
 
         [TestMethod]
@@ -26,6 +27,12 @@ namespace Matchy.Specs
         public void Fib_1()
         {
             Assert.AreEqual(1, fib[1]);
+        }
+
+        [TestMethod]
+        public void Fib_2()
+        {
+            Assert.AreEqual(1, fib[2]);
         }
     }
 }
