@@ -16,7 +16,7 @@ namespace Matchy.Specs
                .Match(0).With(0)
                .Match(1).With(1)
                .Match(2).With(1)
-               .Match(aLargeInt).With(x => { throw new ArgumentOutOfRangeException("N", x, "We only support numbers up to 1000."); })
+               .Match(aLargeInt).With(x => { throw new ArgumentOutOfRangeException("N", x, "We only support numbers up to 10."); })
                .Match<int>().With(n => fib[n - 1] + fib[n - 2])
                .Match<string>().With("You found the easter egg");
         }
