@@ -42,7 +42,7 @@ namespace Matchy
         {
             public Def parent;
             private T value;
-            private dynamic result;
+            private Func<T,dynamic> result;
             bool type_only = true;
 
             internal Matched(Def parent)
@@ -58,12 +58,13 @@ namespace Matchy
 
             public Def with(T result)
             {
-                this.result = result;
+                this.result = (x) => result;
                 return parent;
             }
 
             public Def with(Func<T, dynamic> what)
             {
+                this.result = what;
                 return parent;
             }
 
@@ -86,7 +87,7 @@ namespace Matchy
 
             public dynamic this[dynamic value]
             {
-                get { return result; }
+                get { return result(value); }
             }
 
         }

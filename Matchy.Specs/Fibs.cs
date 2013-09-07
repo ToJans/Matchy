@@ -14,7 +14,7 @@ namespace Matchy.Specs
                .match(0).with(0)
                .match(1).with(1)
                .match(2).with(1)
-               .match<int>().with(n => fib[n - 1] * fib[n - 2]);
+               .match<int>().with(n => fib[n - 1] + fib[n - 2]);
         }
 
         [TestMethod]
@@ -33,6 +33,12 @@ namespace Matchy.Specs
         public void Fib_2()
         {
             Assert.AreEqual(1, fib[2]);
+        }
+
+        [TestMethod]
+        public void Fib_3()
+        {
+            Assert.AreEqual(2, fib[3]);
         }
     }
 }
