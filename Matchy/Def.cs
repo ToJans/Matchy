@@ -5,89 +5,86 @@ using System.Text;
 
 namespace Matchy
 {
-    public class Def:IMatcher
+    public class Def : IMatcher
     {
         List<IMatcher> Matchers = new List<IMatcher>();
 
-        public Matched<T> match<T>() 
+        public Matched<T> Match<T>()
         {
             var matcher = new Matched<T>(this);
             Matchers.Add(matcher);
             return matcher;
         }
 
-        public Matched<T> match<T>(T value) 
+        public Matched<T> Match<T>(T value)
         {
-            var matcher = new Matched<T>(this,value);
+            var matcher = new Matched<T>(this, value);
             Matchers.Add(matcher);
             return matcher;
         }
 
-        public Matched<T> match<T>(Predicate<T> what) 
+        public Matched<T> Match<T>(Predicate<T> what)
         {
-            throw new NotImplementedException();
+            var matcher = new Matched<T>(this, what);
+            Matchers.Add(matcher);
+            return matcher;
         }
 
         public bool IsMatch(object value)
         {
-            return Matchers.Any(x=>x.IsMatch(value));
+            return Matchers.Any(x => x.IsMatch(value));
         }
 
         public dynamic this[dynamic value]
         {
-            get { return Matchers.First(x=>x.IsMatch(value))[value]; }
+            get { return Matchers.First(x => x.IsMatch(value))[value]; }
         }
 
-        public class Matched<T>:Matchy.IMatcher 
+        public class Matched<T> : Matchy.IMatcher
         {
             public Def parent;
-            private T value;
-            private Func<T,dynamic> result;
-            bool type_only = true;
+            private Predicate<T> matchValue;
+            private Func<T, dynamic> getResult;
 
             internal Matched(Def parent)
             {
                 this.parent = parent;
+                this.matchValue = x => true;
             }
 
-            internal Matched(Def parent, T valueToMatch):this(parent)
+            internal Matched(Def parent, T valueToMatch)
+                : this(parent)
             {
-                this.type_only = false;
-                this.value = valueToMatch;
+                this.matchValue = x => (x == null && valueToMatch == null) || (valueToMatch != null && valueToMatch.Equals(x));
             }
 
-            public Def with(T result)
+            public Matched(Def def, Predicate<T> matchValue)
+                : this(def)
             {
-                this.result = (x) => result;
+                this.matchValue = matchValue;
+            }
+
+            public Def With(T result)
+            {
+                this.getResult = (x) => result;
                 return parent;
             }
 
-            public Def with(Func<T, dynamic> what)
+            public Def With(Func<T, dynamic> what)
             {
-                this.result = what;
+                this.getResult = what;
                 return parent;
             }
 
             public bool IsMatch(object value)
             {
-                dynamic self = this;
-                dynamic dvalue = value;
-                return self.IsMatchInternal(dvalue);
-            }
-
-            bool IsMatchInternal(T value)
-            {
-                return type_only || (this.value==null && value == null) || (this.value!=null && this.value.Equals(value));
-            }
-
-            bool IsMatchInternal(object value)
-            {
-                return (this.value == null && value == null) || (this.value != null && this.value.Equals(value));
+                return (value == null && matchValue((T)value))
+                    || (value != null && typeof(T).IsAssignableFrom(value.GetType()) && matchValue((T)value));
             }
 
             public dynamic this[dynamic value]
             {
-                get { return result(value); }
+                get { return getResult(value); }
             }
 
         }
