@@ -9,7 +9,7 @@ namespace Matchy.Specs
     [TestClass]
     public class _99BottlesOfBeer
     {
-        Def verse, bottles, lastOne;
+        Def verse, bottles, lastOne, sing;
 
         [TestInitialize]
         public void Setup()
@@ -31,6 +31,10 @@ namespace Matchy.Specs
                 .Match(0).With("no more bottles")
                 .Match(1).With("1 bottle")
                 .Match<int>().With(n => string.Format("{0} bottles", n));
+
+            sing = new Def()
+                .Match((Tuple<int, int> x) => x.Item1 < x.Item2).With(x => "")
+                .Match<Tuple<int, int>>().With(x => string.Format("{0}\n{1}", verse[x.Item1],sing[Tuple.Create(x.Item1 -1,x.Item2)]));
         }
 
         [TestMethod]
@@ -67,6 +71,23 @@ namespace Matchy.Specs
                 "No more bottles of beer on the wall, no more bottles of beer.\n" +
                 "Go to the store and buy some more, 99 bottles of beer on the wall.\n";
             Assert.AreEqual(Expected, verse[0]);
+        }
+
+        [TestMethod]
+        public void Sing_8_to_6()
+        {
+            var Expected = 
+                "8 bottles of beer on the wall, 8 bottles of beer.\n"+
+                "Take one down and pass it around, 7 bottles of beer on the wall.\n"+
+                "\n"+
+                "7 bottles of beer on the wall, 7 bottles of beer.\n"+
+                "Take one down and pass it around, 6 bottles of beer on the wall.\n"+
+                "\n"+
+                "6 bottles of beer on the wall, 6 bottles of beer.\n"+
+                "Take one down and pass it around, 5 bottles of beer on the wall.\n"+
+                "\n";
+            Assert.AreEqual(Expected,sing[Tuple.Create(8,6)]);
+            
         }
     }
 }
