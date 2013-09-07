@@ -21,5 +21,11 @@ namespace Matchy.Specs
         {
             Assert.AreEqual(0,fib[0]);
         }
+
+        [TestMethod]
+        public void Fib_1()
+        {
+            Assert.AreEqual(1, fib[1]);
+        }
     }
 }

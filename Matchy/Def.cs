@@ -25,7 +25,7 @@ namespace Matchy
 
         public dynamic this[dynamic value]
         {
-            get { return 0; }
+            get { return value; }
         }
 
         class Matched<T>:IMatched<T>
