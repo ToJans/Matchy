@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Matchy.Specs
@@ -33,8 +30,9 @@ namespace Matchy.Specs
                 .Match<int>().With(n => string.Format("{0} bottles", n));
 
             sing = new Def()
+                .Match((int x) => x >= 0).With(x => sing[Tuple.Create(x, 0)])
                 .Match((Tuple<int, int> x) => x.Item1 < x.Item2).With(x => "")
-                .Match<Tuple<int, int>>().With(x => string.Format("{0}\n{1}", verse[x.Item1],sing[Tuple.Create(x.Item1 -1,x.Item2)]));
+                .Match<Tuple<int, int>>().With(x => string.Format("{0}\n{1}", verse[x.Item1], sing[Tuple.Create(x.Item1 - 1, x.Item2)]));
         }
 
         [TestMethod]
@@ -76,18 +74,38 @@ namespace Matchy.Specs
         [TestMethod]
         public void Sing_8_to_6()
         {
-            var Expected = 
-                "8 bottles of beer on the wall, 8 bottles of beer.\n"+
-                "Take one down and pass it around, 7 bottles of beer on the wall.\n"+
-                "\n"+
-                "7 bottles of beer on the wall, 7 bottles of beer.\n"+
-                "Take one down and pass it around, 6 bottles of beer on the wall.\n"+
-                "\n"+
-                "6 bottles of beer on the wall, 6 bottles of beer.\n"+
-                "Take one down and pass it around, 5 bottles of beer on the wall.\n"+
+            var Expected =
+                "8 bottles of beer on the wall, 8 bottles of beer.\n" +
+                "Take one down and pass it around, 7 bottles of beer on the wall.\n" +
+                "\n" +
+                "7 bottles of beer on the wall, 7 bottles of beer.\n" +
+                "Take one down and pass it around, 6 bottles of beer on the wall.\n" +
+                "\n" +
+                "6 bottles of beer on the wall, 6 bottles of beer.\n" +
+                "Take one down and pass it around, 5 bottles of beer on the wall.\n" +
                 "\n";
-            Assert.AreEqual(Expected,sing[Tuple.Create(8,6)]);
-            
+            Assert.AreEqual(Expected, sing[Tuple.Create(8, 6)]);
+
+        }
+
+        [TestMethod]
+        public void Sing_all_the_rest()
+        {
+            var Expected =
+                "3 bottles of beer on the wall, 3 bottles of beer.\n" +
+                "Take one down and pass it around, 2 bottles of beer on the wall.\n" +
+                "\n" +
+                "2 bottles of beer on the wall, 2 bottles of beer.\n" +
+                "Take one down and pass it around, 1 bottle of beer on the wall.\n" +
+                "\n" +
+                "1 bottle of beer on the wall, 1 bottle of beer.\n" +
+                "Take it down and pass it around, no more bottles of beer on the wall.\n" +
+                "\n" +
+                "No more bottles of beer on the wall, no more bottles of beer.\n" +
+                "Go to the store and buy some more, 99 bottles of beer on the wall.\n" +
+                "\n";
+            Assert.AreEqual(Expected, sing[3]);
+
         }
     }
 }
