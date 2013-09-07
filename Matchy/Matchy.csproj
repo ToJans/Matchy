@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="IMatch.cs" />
     <Compile Include="IMatched.cs" />
+    <Compile Include="Def.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
